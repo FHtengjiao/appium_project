@@ -1,3 +1,5 @@
+import threading
+
 from utils.CLT_util import CLTUtil
 from utils.Port import Port
 
@@ -7,6 +9,8 @@ class Service(object):
     def __init__(self):
         self.clt_util = CLTUtil()
         self.port = Port(self.clt_util)
+        self.devices = self.get_devices()
+        self.commands = self.create_command()
 
     def get_devices(self):
         devices = []
@@ -16,22 +20,27 @@ class Service(object):
                 devices.append(result[i].split('\t')[0])
         return devices
 
-    def get_port(self, start, port_num):
-        port_list = self.port.create_port(start, port_num)
-        return port_list
-
     def create_command(self):
         command_list = []
-        devices = self.get_devices()
-        num = len(devices)
-        p = self.get_port(4723, num)
-        bp = self.get_port(4900, num)
+        num = len(self.devices)
+        p = self.port.create_port(4700, num)
+        bp = self.port.create_port(4900, num)
         for i in range(0, num):
-            command = "appium -p %d -bp %d -U %s -no Reset --session-override" % (p[i], bp[i], devices[i])
+            command = "appium -p %d -bp %d -U %s --no-reset --session-override" % (p[i], bp[i], self.devices[i])
             command_list.append(command)
         return command_list
+
+    def start_server(self, i):
+        self.clt_util.execute_command(self.commands[i])
+
+    def main(self):
+        i = 0
+        while i != len(self.devices):
+            exe_thread = threading.Thread(target=self.start_server, args=(i,))
+            exe_thread.start()
+            i = i + 1
 
 
 if __name__ == '__main__':
     service = Service()
-    print(service.create_command())
+    service.main()
