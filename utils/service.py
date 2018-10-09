@@ -33,7 +33,20 @@ class Service(object):
     def start_server(self, i):
         self.clt_util.execute_command(self.commands[i])
 
+    def kill_server(self):
+        pid_list = []
+        command = 'ps | grep "node"'
+        results = self.clt_util.execute_command_result(command)
+        for i in results:
+            if "appium" in i:
+                pid = i.strip(' ').split(' ')[0]
+                pid_list.append(pid)
+        while len(pid_list) != 0:
+            self.clt_util.execute_command("kill %s" % pid_list[0])
+            pid_list.pop(0)
+
     def main(self):
+        self.kill_server()
         i = 0
         while i != len(self.devices):
             exe_thread = threading.Thread(target=self.start_server, args=(i,))

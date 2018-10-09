@@ -13,8 +13,8 @@ class Port(object):
         # 创建check port命令：
         # netstat -anp tcp | grep port_number
         # lsof -i port_number
-        # command = "netstat -anp tcp | grep " + str(port)
-        command = "netstat -ano | findstr %d" % port
+        command = "netstat -anp tcp | grep " + str(port)
+        # command = "netstat -ano | findstr %d" % port
         result = self.clt_tool.execute_command_result(command)
 
         if len(result[0]) == 0:
