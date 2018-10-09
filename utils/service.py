@@ -2,6 +2,7 @@ import threading
 
 from utils.CLT_util import CLTUtil
 from utils.Port import Port
+from utils.device_info_io import DeviceInfoIO
 
 
 class Service(object):
@@ -9,6 +10,7 @@ class Service(object):
     def __init__(self):
         self.clt_util = CLTUtil()
         self.port = Port(self.clt_util)
+        self.info_io = DeviceInfoIO()
         self.devices = self.get_devices()
         self.commands = self.create_command()
 
@@ -21,6 +23,7 @@ class Service(object):
         return devices
 
     def create_command(self):
+        self.info_io.clear_file()
         command_list = []
         num = len(self.devices)
         p = self.port.create_port(4700, num)
@@ -28,6 +31,7 @@ class Service(object):
         for i in range(0, num):
             command = "appium -p %d -bp %d -U %s --no-reset --session-override" % (p[i], bp[i], self.devices[i])
             command_list.append(command)
+            self.info_io.write_to_yaml(i, p[i], bp[i], self.devices[i])
         return command_list
 
     def start_server(self, i):
