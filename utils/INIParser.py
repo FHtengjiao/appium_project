@@ -8,7 +8,7 @@ class ReadIni:
     def __init__(self, file_path=None):
 
         if file_path is None:
-            file_path = "../config/conf.ini"
+            file_path = "/Users/tengjiaoxie/PycharmProjects/appium_project/config/conf.ini"
 
         reader = ConfigParser()
         reader.read(file_path)

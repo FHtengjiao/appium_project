@@ -14,12 +14,16 @@ class Service(object):
         self.devices = self.get_devices()
         self.commands = self.create_command()
 
+    def get_device_num(self):
+        return len(self.devices)
+
     def get_devices(self):
         devices = []
         result = self.clt_util.execute_command_result("adb devices")
         for i in range(1, len(result)):
             if 'device' in result[i]:
                 devices.append(result[i].split('\t')[0])
+        print(devices)
         return devices
 
     def create_command(self):
@@ -32,6 +36,7 @@ class Service(object):
             command = "appium -p %d -bp %d -U %s --no-reset --session-override" % (p[i], bp[i], self.devices[i])
             command_list.append(command)
             self.info_io.write_to_yaml(i, p[i], bp[i], self.devices[i])
+        print(command_list)
         return command_list
 
     def start_server(self, i):
@@ -50,12 +55,16 @@ class Service(object):
             pid_list.pop(0)
 
     def main(self):
+        threads = []
         self.kill_server()
         i = 0
         while i != len(self.devices):
             exe_thread = threading.Thread(target=self.start_server, args=(i,))
-            exe_thread.start()
+            threads.append(exe_thread)
             i = i + 1
+        for j in threads:
+            j.start()
+            print(j.name)
 
 
 if __name__ == '__main__':
