@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from basedriver.BaseDriver import BaseDriver
 from utils.Locator import ElementLocator
 from utils.device_info_io import DeviceInfoIO

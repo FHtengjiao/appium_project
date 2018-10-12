@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 
 
@@ -14,5 +15,6 @@ class CLTUtil(object):
 
 if __name__ == '__main__':
     clt_util = CLTUtil()
-    print(clt_util.execute_command_result('ps -ef | grep "appium -p"'))
+    print(clt_util.execute_command_result('tasklist | find "node.exe"'))
+
 

@@ -1,7 +1,6 @@
+# -*- coding: utf-8 -*-
+import multiprocessing
 import time
-
-import os
-
 import threading
 import unittest
 
@@ -20,10 +19,10 @@ class TestCase(ParamTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.loginbusiness = LoginBusiness(params)
+        pass
 
     def setUp(self):
-        pass
+        self.loginbusiness = LoginBusiness(params)
 
     def test_login_in_correct(self):
         self.loginbusiness.send_username()
@@ -49,7 +48,6 @@ if __name__ == '__main__':
     server.main()
     time.sleep(10)
     num = server.get_device_num()
-    print(num)
     for i in range(num):
-        thread = threading.Thread(target=get_suite, args=(i,))
-        thread.start()
+        process = multiprocessing.Process(target=get_suite, args=(i,))
+        process.start()

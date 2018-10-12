@@ -1,10 +1,22 @@
+# -*- coding: utf-8 -*-
 import yaml
+
+from utils.getplatform import Platform
 
 
 class DeviceInfoIO(object):
 
+    def __init__(self):
+        sys = Platform.get_platform_name()
+        if sys == 'Windows':
+            self.file_path = r'F:\PythonProject\appium_project\config\deviceinfo.yaml'
+        elif sys == 'Linux':
+            self.file_path = ''
+        elif sys == 'macOS':
+            self.file_path = r'/Users/tengjiaoxie/PycharmProjects/appium_project/config/deviceinfo.yaml'
+
     def read_yaml(self):
-        with open('/Users/tengjiaoxie/PycharmProjects/appium_project/config/deviceinfo.yaml') as fp:
+        with open(self.file_path) as fp:
             loader = yaml.load(fp)
             return loader
 
@@ -16,11 +28,11 @@ class DeviceInfoIO(object):
                 "device": device
             }
         }
-        with open('/Users/tengjiaoxie/PycharmProjects/appium_project/config/deviceinfo.yaml', 'a') as fp:
+        with open(self.file_path, 'a') as fp:
             yaml.dump(info, fp)
 
     def clear_file(self):
-        with open('/Users/tengjiaoxie/PycharmProjects/appium_project/config/deviceinfo.yaml', 'w') as fp:
+        with open(self.file_path, 'w') as fp:
             fp.truncate()
 
 

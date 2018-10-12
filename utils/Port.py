@@ -1,20 +1,23 @@
-# encoding = utf-8
+# -*- coding: utf-8 -*-
+from utils.getplatform import Platform
 
 
 class Port(object):
 
     def __init__(self, tool):
         self.clt_tool = tool
+        self.sys = Platform.get_platform_name()
 
     def check_port(self, port):
 
         flag = True
-
         # 创建check port命令：
         # netstat -anp tcp | grep port_number
         # lsof -i port_number
-        command = "netstat -anp tcp | grep " + str(port)
-        # command = "netstat -ano | findstr %d" % port
+        if self.sys == 'macOS':
+            command = "netstat -anp tcp | grep %d" % port
+        else:
+            command = "netstat -ano | findstr %d" % port
         result = self.clt_tool.execute_command_result(command)
 
         if len(result[0]) == 0:

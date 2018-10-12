@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from page.loginpage import LoginPage
 
 
